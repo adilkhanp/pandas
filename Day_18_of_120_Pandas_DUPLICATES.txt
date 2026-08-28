@@ -1,0 +1,31 @@
+import pandas as pd
+
+employees = pd.read_csv("D:\employees.csv")
+
+print(employees.to_string())
+
+print(employees[employees.duplicated("FIRST_NAME")].to_string())
+
+print(employees[employees.duplicated(
+    subset= ["FIRST_NAME" , "LAST_NAME"]
+)].to_string())
+
+print(employees.drop_duplicates(
+    "FIRST_NAME"
+)["FIRST_NAME"].to_string())
+
+print(employees.drop_duplicates(
+    subset = ["FIRST_NAME","LAST_NAME"]
+)["FIRST_NAME"].to_string())
+
+print( employees.groupby("FIRST_NAME")["FIRST_NAME"].count().to_string())
+
+# employees.groupby("FIRST_NAME")["FIRST_NAME"].count().to_csv('D:/first_names.csv')
+
+# df = employees.drop_duplicates( "FIRST_NAME" , keep = False )[["FIRST_NAME","LAST_NAME"]]
+# df = employees.drop_duplicates( "FIRST_NAME" , keep = "first" )[["FIRST_NAME","LAST_NAME"]]
+df = employees.drop_duplicates( "FIRST_NAME" , keep = "last" )[["FIRST_NAME","LAST_NAME"]]
+# print(df)
+df.to_csv("D:/emp_data_last.csv")
+
+# df.groupby("FIRST_NAME").count().to_csv('D:/first_names_without_duplicates.csv')

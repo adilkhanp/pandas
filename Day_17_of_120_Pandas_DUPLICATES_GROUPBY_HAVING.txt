@@ -1,0 +1,57 @@
+import pandas as pd
+
+employees = pd.read_csv("D:\employees.csv")
+
+ print(employees)
+ print(employees["DEPARTMENT_ID"].drop_duplicates())
+ print(employees.drop_duplicates())
+
+ print(employees[["FIRST_NAME","DEPARTMENT_ID"]].duplicated())
+ print(employees.loc[employees["FIRST_NAME"].duplicated()])
+
+ print(employees["FIRST_NAME"].duplicated().sum())
+
+ print(employees["FIRST_NAME"].drop_duplicates( keep = False))
+
+ print(employees["FIRST_NAME"].drop_duplicates( keep =  "first"))
+
+ print(employees["FIRST_NAME"].drop_duplicates( keep =  "last"))
+
+ first_df = employees["FIRST_NAME"].drop_duplicates( keep =  "first")
+
+ print(first_df)
+
+
+################ groupBy ###################
+
+# syntax : dataframe.groupby(columnslist)[column_name].function
+# syntax : dataframe.groupby(columnlist).agg( aliasname = ( columnname , function),
+#                                                aliasname = ( columnname , function ),
+#                                                 .
+#                                                 .
+#                                             );
+ print(employees.groupby("DEPARTMENT_ID")["SALARY"].sum()) #select department_id , sum(salary) from employees group by department_id;
+ print(employees.groupby("DEPARTMENT_ID")["SALARY"].max()) #select department_id , max(salary) from employees group by department_id;
+
+ print(employees.groupby("DEPARTMENT_ID").agg(
+         TotalSalary = ("SALARY",'sum'),
+         MaximumSalary = ("SALARY",'max'),
+         MinumumSalary = ("SALARY",'min'),
+         commission_count = ("COMMISSION_PCT",'count')
+ ))
+
+ print(employees.groupby(['DEPARTMENT_ID','FIRST_NAME'])["SALARY"].sum())
+
+ grp_dat = employees.groupby('DEPARTMENT_ID')['EMPLOYEE_ID'].size()
+
+ print(type(grp_dat))
+
+ print(grp_dat[grp_dat > 5])
+
+avg_sal = employees["SALARY"].sum()
+
+avg_sal = avg_sal/len(employees)
+
+print(avg_sal)
+
+print(employees[employees["SALARY"] > avg_sal])  # select * from employees where salary > ( select avg(salary) from employees);

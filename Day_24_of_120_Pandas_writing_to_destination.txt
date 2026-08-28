@@ -1,0 +1,55 @@
+import pandas as pd
+import oracledb
+from sqlalchemy import *
+from sqlalchemy.dialects import oracle
+
+employees = pd.read_csv('D:/employees.csv')
+
+employees.to_csv('D:/emp_output.csv')
+
+employees.query(" SALARY >= 10000")\
+         .get(["FIRST_NAME","LAST_NAME","SALARY"])\
+         .to_csv("D:/emp_gt_10k.csv"
+                 ,index = False
+                 ,mode = 'a'
+                 ,header = False)
+
+employees.query("SALARY >= 10000")\
+         .get(["FIRST_NAME","LAST_NAME","SALARY","HIRE_DATE"])\
+         .to_excel( "D:/emp_sheet_output.xlsx",
+                  sheet_name = "GT_10K")
+
+employees.query("SALARY >= 12000")\
+         .get(["FIRST_NAME","LAST_NAME","SALARY","HIRE_DATE"])\
+         .to_excel( "D:/emp_sheet_output.xlsx",
+                  sheet_name = "GT_12K"
+                  )
+
+with pd.ExcelWriter("D:/emp_multiple_sheets.xlsx") as ew:
+    employees.query("SALARY.between(5000,10000)").to_excel(ew, sheet_name = "BELOW_10K")
+    employees.query("SALARY >= 10000").to_excel(ew, sheet_name="GT_10K")
+
+
+username = "hr"
+password = "hr"
+host = "localhost"
+port = 1521
+service_name = "ORCL"
+
+engine = create_engine(
+    f"oracle+oracledb://{username}:{password}@{host}:{port}/?service_name={service_name}"
+)
+
+dd = pd.read_sql("select * from employees where department_id = 10",engine)
+
+print(dd.dtypes)
+
+typ = { "salary" : oracle.NUMBER}
+
+dd.to_sql("employees_10",engine , dtype= typ ,if_exists = "append") # adds to the existing data
+dd.to_sql("employees_10",engine , dtype= typ ,if_exists = "fail")   # throws error if table exists
+dd.to_sql("employees_10",engine , dtype= typ ,if_exists = "replace")  # delete and inserts the data
+dd = pd.read_sql_table("employees_10",engine)
+
+
+print(dd.to_string())

@@ -1,0 +1,83 @@
+import pandas as pd
+
+employees = pd.read_csv('D:/employees.csv')
+departments = pd.read_csv('D:/departments.csv')
+
+print(employees.to_string())
+
+employees["HIRE_DATE"] = pd.to_datetime(employees["HIRE_DATE"],format ='%d-%b-%y')
+
+print(employees.dtypes)
+
+print(employees[employees["HIRE_DATE"] >= pd.to_datetime('01-JAN-2007',format = "%d-%b-%Y")].to_string())
+
+####### display first_name , last_name , salary , year_of_joining
+
+print(employees.get(["FIRST_NAME", "LAST_NAME", "SALARY","HIRE_DATE"])
+      .assign( Joining_year = (lambda x : x["HIRE_DATE"].dt.year))
+      .get(["FIRST_NAME", "LAST_NAME", "SALARY","Joining_year"]).to_string())
+
+print(employees.groupby(employees["HIRE_DATE"].dt.year).size())
+
+print(employees["HIRE_DATE"].dt.day_name())
+
+print( employees.merge(departments ,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")
+                .assign( Joining_year = (lambda x : x["HIRE_DATE"].dt.year))
+                .groupby(["DEPARTMENT_NAME","Joining_year"] ,as_index= False)
+                .size()
+                .sort_values( by = ["DEPARTMENT_NAME","Joining_year"] , ascending = [True,False])
+                .to_string()
+       )
+
+print(employees["HIRE_DATE"].dt.strftime("%B-%Y-%d"))
+
+print(employees["HIRE_DATE"].dt.strftime("%a").to_string())
+
+print(employees.loc[employees["HIRE_DATE"].dt.strftime("%a") == 'Sun'].to_string())
+
+print( employees[employees["HIRE_DATE"].dt.strftime("%a").str.lower() == 'sun'])
+
+print( employees[employees["FIRST_NAME"].str.startswith('A')]["FIRST_NAME"])
+
+print (employees["HIRE_DATE"])
+
+dd = pd.to_datetime('2026-10-10', format= '%Y-%m-%d').normalize()
+
+print( dd + pd.Timedelta(days = 1) )
+
+print( dd + pd.DateOffset( months = 1))
+
+print( dd + pd.Timedelta(days = -1) )
+
+print( ( dd + pd.DateOffset( months = -1)).date())
+
+print( dd.day , dd.day_name() , dd.month_name() , dd.month , dd.week , dd.quarter, dd.year)
+
+print( "oracle".lower())
+
+tran = [{
+           "Name" : "Adilkhan",
+            "Tran_date" : "01-AUG-2026"
+        },
+        {
+           "Name" : "kARTHIK",
+            "Tran_date" : "01-JUL-2026"
+        },
+
+      ]
+
+print(tran)
+
+tran = pd.DataFrame(tran)
+
+print(tran)
+
+dd = pd.Timestamp.now()
+
+dd = dd - pd.Timedelta(days = 30)
+
+print(dd)
+
+print( tran[pd.to_datetime(tran["Tran_date"] ,format = "%d-%b-%Y") > dd])

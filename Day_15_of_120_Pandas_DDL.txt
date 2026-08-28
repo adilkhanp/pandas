@@ -1,0 +1,53 @@
+import pandas as pd
+
+employees = pd.read_csv("D:\employees.csv")
+
+print(employees)
+
+employees["New_column"] = "Hello"  # alter table table_name add column
+
+print(employees.columns)
+
+employees.drop("New_column", axis = 1 , inplace= True)  # alter table drop column column_name
+print(employees)
+
+employees.drop(["DEPARTMENT_ID","LAST_EMPLOYER"],axis = 1 , inplace= True)
+print(employees)
+
+print(employees.rename(
+    columns= { "FIRST_NAME" : "EMPLOYEE_NAME"}
+))                                                     # alter table tablename rename column column_name
+
+print(employees.rename(
+    columns= { "FIRST_NAME" : "EMPLOYEE_NAME",
+               "LAST_NAME" : "EMPLOYEE_LAST_NAME"}
+))
+
+employees.rename(
+    columns= { "FIRST_NAME" : "EMPLOYEE_NAME",
+               "LAST_NAME" : "EMPLOYEE_LAST_NAME"},
+    inplace= True
+)
+
+print(employees.columns)
+
+print(employees.dtypes)
+
+print(employees["EMPLOYEE_ID"].astype("str"))  # alter table tablename modify columnname datatype
+
+employees.astype({"EMPLOYEE_ID": "str",
+                              "SALARY" : "str"})
+
+print(employees.dtypes)
+
+employees.astype({"EMPLOYEE_ID": "str"})
+
+
+############### vectorization ###############
+
+print(employees["SALARY"].astype("int") + 1000)
+
+employees["SALARY"] = employees["SALARY"].astype("int") + 1000
+
+print(employees["SALARY"].dtype)
+

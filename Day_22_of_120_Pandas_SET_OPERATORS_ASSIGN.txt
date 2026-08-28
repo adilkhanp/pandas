@@ -1,0 +1,33 @@
+
+import pandas as pd
+
+employees = pd.read_csv('D:/employees.csv')
+
+print(employees)
+
+employees_10_20 = employees.query("DEPARTMENT_ID.isin([10,20])")
+
+print(employees_10_20.to_string())
+
+employees_10 = employees.query("DEPARTMENT_ID.isin([ 10 , 30 ])")
+
+print(employees_10.to_string())
+
+print(pd.concat([employees_10_20,employees_10]).to_string())
+
+print(pd.concat([employees_10_20,employees_10]).drop_duplicates().to_string())
+
+print(employees_10_20.merge(employees_10).to_string())
+
+print( employees_10_20.merge(employees_10 , how = "outer" , indicator= True).query("_merge == 'left_only'").to_string())
+
+
+print( employees_10_20.merge(employees_10 , how = "outer" , indicator= True).query("_merge == 'right_only'").to_string())
+
+
+########### assign
+
+employees = employees.assign( AnnualSalary = ( lambda x : x["SALARY"] * 12),
+                              FullName = (lambda row : row["FIRST_NAME"]+ " " + row["LAST_NAME"]))
+
+print( employees.to_string())

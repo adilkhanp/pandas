@@ -1,0 +1,43 @@
+import pandas as pd
+
+Pandas is a module to perform data analysis.
+
+1. Series   --- single column value ( list )
+2. Dataframe ---- Two dimensional value ( dictionary)
+list --- []
+dictionary --- {}
+tuple --- ()
+set  --- {}
+
+employees = pd.read_csv("D:\employees.csv")
+
+print(employees)    # select * from employees
+print(type(employees))
+
+print(employees.get("FIRST_NAME","Not found"))
+print(type(employees.get("FIRST_NAME")))
+print(employees["FIRST_NAME"])    # select first_name from employees
+
+print(employees[["FIRST_NAME","LAST_NAME"]]) # select first_name , last_name from employees
+
+print(type(employees[["FIRST_NAME","LAST_NAME"]]))
+
+print(employees.info())  # desc employees
+
+print(employees.shape)   # ( rows X column)
+print( type(employees.shape))
+
+print(employees.describe())  # It displays count , mean, std, min ,25% , 50% , 75% , max values of all
+                             # integer columns in the dataframe
+
+print(employees.columns)  # It displays all the columns in the list
+
+print(employees.dtypes)   # It displays the datatypes of each column
+
+Task : print the output like below
+           Number of rows : rowcount
+		   Number of columns : columnscount
+		   
+	   print the maximum , minimum , 25% value of all integer columns	   
+	   
+	   
