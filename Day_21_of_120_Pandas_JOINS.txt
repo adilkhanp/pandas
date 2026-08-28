@@ -1,0 +1,80 @@
+import pandas as pd
+
+employees = pd.read_csv("D:\employees.csv")
+departments = pd.read_csv("D:\departments.csv")
+locations = pd.read_csv("D:\locations.csv")
+
+print( employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner",
+                       suffixes= ( "_emp" , "_dept"))\
+                # .get(["DEPARTMENT_NAME","FIRST_NAME" , "SALARY"])
+                # .to_string()
+                .columns
+     )
+
+print( employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")
+                 .groupby("DEPARTMENT_NAME").count()
+                 .to_string() )
+
+print( employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")
+                 .groupby("DEPARTMENT_NAME").size())
+
+print( employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")
+                 .groupby("DEPARTMENT_NAME")["SALARY"].agg([  "min", "max" , "mean" , "count" ]))
+
+# MIN , MAX , COUNT OF COMMISSION EMPLOYEES
+
+print( employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")
+                 .groupby("DEPARTMENT_NAME").agg( Maximum_salary = ("SALARY", "max"),
+                                                  Minimum_salary = ("SALARY", "min"),
+                                                  Commission_emp = ("COMMISSION_PCT","count")))
+
+print( employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")
+                .merge(locations,
+                       on = "LOCATION_ID",
+                       how = "inner")
+                .get(["FIRST_NAME","DEPARTMENT_NAME","CITY"])
+                .to_string()
+       )
+
+print( employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")
+                .merge(locations,
+                       on = "LOCATION_ID",
+                       how = "inner")
+                .get(["FIRST_NAME","DEPARTMENT_NAME","CITY"])
+                .groupby("CITY").size()
+                .to_string()
+       )
+
+df =employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")\
+                .merge(locations,
+                       on = "LOCATION_ID",
+                       how = "right")\
+                .get(["FIRST_NAME","DEPARTMENT_NAME","CITY"])\
+                .groupby("CITY")["DEPARTMENT_NAME"].count()
+
+print(df[df == 0])
+
+
+print( employees.merge(departments,
+                       on = "DEPARTMENT_ID",
+                       how = "inner")
+                 .groupby("DEPARTMENT_NAME")["SALARY"].agg([  "min", "max" , "mean" , "count" ])
+                 .rename( columns = { "min": "Minimum",
+                                      "max" : "Maximum"})
+                 .to_string())

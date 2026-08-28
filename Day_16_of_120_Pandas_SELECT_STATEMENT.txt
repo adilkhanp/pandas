@@ -1,0 +1,51 @@
+from itertools import groupby
+from tokenize import group
+
+import pandas as pd
+
+# loc
+# iloc
+
+employees = pd.read_csv("D:\employees.csv")
+
+print(employees["FIRST_NAME"])
+print(employees.iloc[ 0: 2  ])
+print(employees.iloc[ 4 :  ])
+print(employees.iloc[ : 5])
+print(employees.iloc[ : -4])
+print( employees.iloc[ -4 : ])
+print(employees.iloc[ 3:  8  ])
+ syntax : dataframe.loc[ start_row_index : end_row_index , [column names] ]
+print(employees.loc[ 0 : 4 , [ "FIRST_NAME", "LAST_NAME"]])  # SELECT FIRST_NAME , LAST_NAME FROM EMPLOYEES WHERE ROWNUM <=4
+
+101  0  -6
+102  1  -5
+103  2  -4
+104  3  -3
+105  4  -2
+106  5  -1
+
+print ( employees.iloc[ 0 : 100 : 2])
+print ( employees.iloc[ 0 : 100 : 3])
+
+print( employees["SALARY"] > 15000)
+syntax : dataframe.loc[ condition , [column names] ]
+print( employees.loc[ employees["SALARY"] > 15000 , ["FIRST_NAME", "EMPLOYEE_ID" , "SALARY"]] ) # SELECT FIRST_NAME , EMPLOYEE_ID , SALARY FROM EMPLOYEES WHERE SALARY > 15000;
+print( employees.loc[ ( employees["SALARY"] > 12000 ) & (employees["DEPARTMENT_ID"] == 80) , ["FIRST_NAME", "EMPLOYEE_ID" , "SALARY"]] ) # SELECT FIRST_NAME , EMPLOYEE_ID , SALARY FROM EMPLOYEES WHERE DEPARTMENT_ID = 80 AND SALARY > 12000;
+print( employees.loc[ (( employees["SALARY"] > 12000 ) & (employees["DEPARTMENT_ID"] == 80) )\
+    | (( employees["SALARY"] > 6000 ) & (employees["DEPARTMENT_ID"] == 50) ), ["FIRST_NAME", "EMPLOYEE_ID" , "SALARY","DEPARTMENT_ID"]] ) # SELECT FIRST_NAME , EMPLOYEE_ID , SALARY , DEPARTMENT_ID FROM EMPLOYEES WHERE (DEPARTMENT_ID = 80 AND SALARY > 12000)   OR (DEPARTMENT_ID = 50 AND SALARY > 6000 ) ;
+print( employees.loc[ ~((( employees["SALARY"] > 12000 ) & (employees["DEPARTMENT_ID"] == 80) )\
+    | (( employees["SALARY"] > 6000 ) & (employees["DEPARTMENT_ID"] == 50) )), ["FIRST_NAME", "EMPLOYEE_ID" , "SALARY","DEPARTMENT_ID"]] ) # SELECT FIRST_NAME , EMPLOYEE_ID , SALARY , DEPARTMENT_ID FROM EMPLOYEES WHERE NOT ((DEPARTMENT_ID = 80 AND SALARY > 12000)   OR (DEPARTMENT_ID = 50 AND SALARY > 6000 )) ;
+print(employees.loc[ (employees["DEPARTMENT_ID"].isin([10,20,30])) , ["FIRST_NAME", "EMPLOYEE_ID" , "SALARY","DEPARTMENT_ID"] ])
+print(employees.loc[ ~(employees["DEPARTMENT_ID"].isin([10,20,30])) , ["FIRST_NAME", "EMPLOYEE_ID" , "SALARY","DEPARTMENT_ID"] ])
+
+print(employees.query( "SALARY > 12000 & DEPARTMENT_ID == 80").get(["FIRST_NAME","LAST_NAME","SALARY","DEPARTMENT_ID"]))
+print(employees.loc[employees["COMMISSION_PCT"].isna() , ["FIRST_NAME","LAST_NAME","DEPARTMENT_ID"]])
+
+print( employees["SALARY"] + employees["COMMISSION_PCT"].fillna(0))
+
+print ( employees.loc[employees["FIRST_NAME"].str.startswith("A") ,"FIRST_NAME"])
+
+TASK : NAME CONTAINS L IN THIRD POSITION
+       NAME CONTAINS TWO A IN
+       DISPLAY  NAME , SALARY , TOTAL_EARNINGS OF EMPLOYEES OF 5O DEPARTMENT

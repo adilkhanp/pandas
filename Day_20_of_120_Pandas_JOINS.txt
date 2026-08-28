@@ -1,0 +1,72 @@
+import pandas as pd
+
+employees = pd.read_csv("D:\employees.csv")
+departments = pd.read_csv("D:\departments.csv")
+locations = pd.read_csv("D:\locations.csv")
+
+print(employees.to_string())
+print(departments.to_string())
+print(locations.to_string())
+
+###### print employee name and department name ###########
+df = employees.merge( departments,
+                 on = "DEPARTMENT_ID",
+                 how = "inner")
+
+print(df.get(["FIRST_NAME","DEPARTMENT_NAME","DEPARTMENT_ID"]).to_string())
+
+employees = employees.rename( columns= {"DEPARTMENT_ID" : "DEPT_ID"})
+
+print(employees.merge(departments,
+                left_on = "DEPT_ID",
+                right_on= "DEPARTMENT_ID",
+                how = "inner"
+                ).to_string()
+      )
+
+print( employees.merge( departments,
+                        left_on = ["DEPT_ID","EMPLOYEE_ID"],
+                        right_on = ["DEPARTMENT_ID", "MANAGER_ID"],
+                        how = "inner").get(["FIRST_NAME","DEPARTMENT_NAME"]).to_string())
+
+print( employees.merge(departments,
+                       left_on = "DEPT_ID",
+                       right_on = "DEPARTMENT_ID",
+                       how = "inner")
+                .query("SALARY > 10000")
+                .get(["FIRST_NAME","DEPARTMENT_NAME","SALARY"])
+                .to_string())
+
+print ( employees.merge(departments,
+                       left_on = "DEPT_ID",
+                       right_on = "DEPARTMENT_ID",
+                       how = "right")
+                .get(["DEPARTMENT_NAME","FIRST_NAME"]).to_string())
+
+############# display departments in which there are no employees #############
+df = employees.merge(departments,
+                         left_on="DEPT_ID",
+                         right_on="DEPARTMENT_ID",
+                         how="right") \
+              .get(["FIRST_NAME","DEPARTMENT_NAME"])\
+              .isna()
+
+
+print(df)
+
+print(df[df["FIRST_NAME"].isna()])
+
+
+df = employees.merge(departments,
+                         left_on="DEPT_ID",
+                         right_on="DEPARTMENT_ID",
+                         how="inner")\
+               .query("MANAGER_ID_x == 100")
+
+print(df.to_string())
+
+df = employees.merge(departments,
+                         left_on="DEPT_ID",
+                         right_on="DEPARTMENT_ID",
+                         how="inner")\
+               .query("MANAGER_ID_x == 100")

@@ -1,0 +1,55 @@
+import pandas as pd
+
+employees = pd.read_csv("D:\employees.csv")
+
+print(employees.groupby("DEPARTMENT_ID")["EMPLOYEE_ID"].count())
+
+dept_count = employees.groupby("DEPARTMENT_ID")["EMPLOYEE_ID"].count()
+
+print( dept_count[ dept_count > 5])
+
+avg_sal = employees["SALARY"].mean()
+
+print(avg_sal)
+
+print( employees[ employees["SALARY"] > avg_sal].to_string())
+
+max_sal = employees["SALARY"].max()
+
+print (employees[ employees["SALARY"] == max_sal].to_string())
+
+print (employees.query(" SALARY > 15000").to_string())
+
+print( employees.query( "SALARY == @max_sal").to_string())
+
+################# sorting ###################
+
+print( employees.sort_values("FIRST_NAME").to_string())
+print( employees.sort_values("FIRST_NAME", ascending = False).to_string())
+
+print( employees.sort_values ( by = ["DEPARTMENT_ID","FIRST_NAME"]).get(["DEPARTMENT_ID","FIRST_NAME"]).to_string())  #SELECT DEPARTMENT_ID , FIRST_NAME FROM EMPLOYEES ORDER BY DEPARTMENT_ID , FIRST_NAME;
+
+print( employees.sort_values ( by = ["DEPARTMENT_ID","FIRST_NAME"],
+                               ascending = [True, False])
+       .get(["DEPARTMENT_ID","FIRST_NAME"])
+       .to_string())  #SELECT DEPARTMENT_ID , FIRST_NAME FROM EMPLOYEES ORDER BY DEPARTMENT_ID ASC, FIRST_NAME DESC;
+
+
+print( employees.sort_values ( by = ["DEPARTMENT_ID","FIRST_NAME"] ).reset_index().get(["DEPARTMENT_ID","FIRST_NAME"]).to_string())  #SELECT DEPARTMENT_ID , FIRST_NAME FROM EMPLOYEES ORDER BY DEPARTMENT_ID , FIRST_NAME;
+
+emp_df = employees.sort_values ( by = ["DEPARTMENT_ID","FIRST_NAME"] ).reset_index()
+
+print(emp_df.to_string())
+
+emp_df = employees.sort_values ( by = ["DEPARTMENT_ID","FIRST_NAME"] ).reset_index(drop= True)
+
+print(emp_df.to_string())
+
+################## limitng rows ################
+
+print ( employees.head(10).to_string())
+
+print ( employees.tail(5).to_string())
+
+print( employees.sort_values("SALARY", ascending= False).head(1).to_string())  #### highest salary
+print( employees.sort_values("SALARY", ascending= False).head(3).tail(1).to_string())  ### third highest salary
